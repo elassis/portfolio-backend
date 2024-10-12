@@ -1,0 +1,31 @@
+name: Node.js Deploy
+
+on:
+  push:
+    branches:
+      - main # Trigger on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up SSH
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.10.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Step 3: Deploy code to server
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd portfolio-backend/       # Navigate to the project directory
+            git pull origin main        # Pull the latest changes
+            npm install                 # Install dependencies
+            node index.js             # Restart the application using PM2
+          EOF
