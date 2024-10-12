@@ -17,6 +17,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }} # Private SSH key
+          format: "PEM"
           known_hosts: ${{ secrets.SSH_HOST }} # Known hosts (can be set as a secret)
 
       - name: Deploy to Server
