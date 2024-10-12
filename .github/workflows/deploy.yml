@@ -21,7 +21,7 @@ jobs:
 
       - name: Deploy to Server
         run: |
-          ssh -T -o Port=65002 StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -T Port=65002 -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd public_html/portfolio-backend/
             git pull origin main
             npm install                 # Install dependencies
