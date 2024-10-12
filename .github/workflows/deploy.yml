@@ -22,8 +22,10 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /portfolio-backend/
+            cd public_html/portfolio-backend/
             git pull origin main
+            npm install                 # Install dependencies
+            node index.js               # Restart the application using PM2
 
 # name: Node.js Deploy
 
