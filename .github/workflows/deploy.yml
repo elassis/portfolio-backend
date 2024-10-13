@@ -1,29 +1,60 @@
-name: Node.js Deploy
+name: CI
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Setup SSH
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }} # Private SSH key
-          known_hosts: ${{ secrets.SSH_HOST }} # Known hosts (can be set as a secret)
-
-      - name: Deploy to Server
+      - name: Set up SSH key
         run: |
-          ssh -o StrictHostKeyChecking=no -p 65002 -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Add server to known hosts
+        run: |
+          ssh-keyscan -H 89.116.192.219 >> ~/.ssh/known_hosts
+
+      - name: Run deployment
+        run: |
+          ssh u983744079@89.116.192.219 << 'EOF'
             cd public_html/portfolio-backend/
             git pull origin main
             npm install
             node index.js
           EOF
+
+# name: Node.js Deploy
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Setup SSH
+#         uses: shimataro/ssh-key-action@v2
+#         with:
+#           key: ${{ secrets.SSH_PRIVATE_KEY }} # Private SSH key
+#           known_hosts: ${{ secrets.SSH_HOST }} # Known hosts (can be set as a secret)
+
+#       - name: Deploy to Server
+#         run: |
+#           ssh -o StrictHostKeyChecking=no -p 65002 -T ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+#             cd public_html/portfolio-backend/
+#             git pull origin main
+#             npm install
+#             node index.js
+#           EOF
