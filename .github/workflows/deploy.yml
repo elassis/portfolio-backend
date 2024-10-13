@@ -21,14 +21,7 @@ jobs:
           ssh-keyscan -H 89.116.192.219 >> ~/.ssh/known_hosts
 
       - name: Run deployment
-        run: |
-          ssh u983744079@89.116.192.219 << 'EOF'
-            cd public_html/portfolio-backend/
-            git pull origin main
-            npm install
-            node index.js
-          EOF
-
+        run: ssh u983744079@89.116.192.219 cd public_html/portfolio-backend/ && git pull origin main && npm install && node index.js
 # name: Node.js Deploy
 
 # on:
