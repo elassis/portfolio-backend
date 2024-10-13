@@ -19,7 +19,7 @@ jobs:
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          format: "PEM"
+
       # Step 3: Deploy code to server
       - name: Deploy to Server
         run: |
